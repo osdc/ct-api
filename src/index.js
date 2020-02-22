@@ -24,10 +24,8 @@ const schema = buildSchema(`
 
 const root = {
   hello: () => "Hello world!",
-  addevent: arg => {
-    const event = new Event({
-      Name: arg.eventinput.Name
-    });
+  addevent: ({ eventinput: name }) => {
+    const event = new Event(name);
     event.save();
   },
   nextevent: () => {
