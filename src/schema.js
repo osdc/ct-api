@@ -1,6 +1,6 @@
 const { schemaComposer } = require("graphql-compose");
 const { EventsTC } = require("./models/events");
-const { TracksTC } = require("./models/events;");
+const { TracksTC } = require("./models/events");
 
 schemaComposer.Query.addFields({
   eventById: EventsTC.getResolver("findById"),
