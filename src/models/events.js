@@ -1,50 +1,54 @@
-require('./mongoose-moment')(mongoose);
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
+require("mongoose-moment")(mongoose);
+const { model } = require("mongoose");
+const { composeWithMongoose } = require("graphql-compose-mongoose");
 
 const TracksSchema = new mongoose.Schema({
-  name: [{type: String, required = true}],
+  name: [{ type: String, required: true }],
   description: String,
-  start_time: Moment,
-  resources: [{
-    type: String,
-    unique: true,
-  },],
-  duration: Moment,
-  speakers_gh_handle: [String],
-}) 
+  start_time: "Moment",
+  resources: [
+    {
+      type: String,
+      unique: true
+    }
+  ],
+  duration: "Moment",
+  speakers_gh_handle: [String]
+});
 
-export const EventsSchema = new mongoose.Schema({
-  name: {type: String, required = true},
+const EventsSchema = new mongoose.Schema({
+  name: { type: String, required: true },
   description: String,
-  dateCreated: { 
-    type: Moment, 
-    required: true,
+  dateCreated: {
+    type: "Moment",
+    required: true
   },
-  dateUpdated: { 
-    type: Moment, 
-    required: true,
+  dateUpdated: {
+    type: "Moment",
+    required: true
   },
-  event_start_time: Moment,
+  event_start_time: "Moment",
   status: {
     type: String,
-    enum: ['scheduled', 'ongoing', 'finished'],
-    default: 'scheduled'
+    enum: ["scheduled", "ongoing", "finished"],
+    default: "scheduled"
   },
-  eventLinks: {type: String, unique = true},
+  eventLinks: { type: String, unique: true },
   visibility: Boolean,
   yes_rsvp_count: Number,
   type: {
     type: String,
-    enum: ['Informal', 'Workshop', 'Talk']
+    enum: ["Informal", "Workshop", "Talk"]
   },
   tracks: {
-      type: [TracksSchema],
+    type: [TracksSchema]
   },
-  location: String,
-})
+  location: String
+});
 
-export const Events = model('Events', EventsSchema);
-export const Tracks = model(`Tracks`, TracksSchema);
+const Events = model("Events", EventsSchema);
+const Tracks = model(`Tracks`, TracksSchema);
 
-export const EventsTC = composeWithMongoose(Events);
-export const TracksTC = composeWithMongoose(Tracks)
+exports.EventsTC = composeWithMongoose(Events, {});
+exports.TracksTC = composeWithMongoose(Tracks);

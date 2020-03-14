@@ -1,8 +1,7 @@
-
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
 const mongoose = require("mongoose");
-import { graphqlSchema } from `./schema.js`;
+const { graphqlSchema } = require("./schema.js");
 
 mongoose
   .connect("mongodb://localhost/ct_api", {
@@ -15,14 +14,14 @@ mongoose
 const app = express();
 
 app.use(
-  '/graphql',
+  "/graphql",
   graphqlHTTP(async (request, response, graphQLParams) => {
     return {
       graphqlSchema,
       graphiql: true,
       context: {
-        req: request,
-      },
+        req: request
+      }
     };
   })
 );
