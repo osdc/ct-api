@@ -23,28 +23,24 @@ app.use(
 
 app.listen(4000, () => console.log("Now browse to localhost:4000/graphql"));
 
-/*
-A sample mutation :
+//A sample mutation:
 
-
-mutation {
-  eventCreateOne( record : {
-  	name: "Open Source for cats",
-    description: "Open source workshops for felines among us.",
-    dateCreated: "2020-03-27",
-    dateUpdated: "2020-03-27",
-    location: "Behind OAT"
-  	}
-  ) {
-    recordId	
-    record {
-      name
-      description
-      dateCreated
-      dateUpdated
-      location
-    }
-  }
-}
-
-*/
+// mutation {
+//   eventCreateOne( record : {
+//   	name: "Open Source for cats",
+//     description: "Open source workshops for felines among us.",
+//     dateCreated: "2020-03-27",
+//     dateUpdated: "2020-03-27",
+//     location: "Behind OAT"
+//   	}
+//   ) {
+//     recordId
+//     record {
+//       name
+//       description
+//       dateCreated
+//       dateUpdated
+//       location
+//     }
+//   }
+// }

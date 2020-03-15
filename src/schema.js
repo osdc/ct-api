@@ -2,6 +2,10 @@ const { schemaComposer } = require("graphql-compose");
 const { EventsTC } = require("./models/events");
 const { TracksTC } = require("./models/events");
 
+// Here and in all other places of code variables suffix ...TC means that this is ObjectTypeComposer instance, ...ITC - InputTypeComposer, ...ETC - EnumTypeComposer.
+// Add needed CRUD User operations to the GraphQL Schema
+// via graphql-compose it will be much much easier, with less typing
+
 schemaComposer.Query.addFields({
   eventById: EventsTC.getResolver("findById"),
   eventByIds: EventsTC.getResolver("findByIds"),

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { model } = require("mongoose");
 const { composeWithMongoose } = require("graphql-compose-mongoose");
 
+// Define Mongoose Schema for Tracks
 const TracksSchema = new mongoose.Schema({
   name: [{ type: String, required: true }],
   description: String,
@@ -16,6 +17,7 @@ const TracksSchema = new mongoose.Schema({
   speakers_gh_handle: [String]
 });
 
+// Define Mongoose Schema for Events
 const EventsSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
@@ -41,13 +43,18 @@ const EventsSchema = new mongoose.Schema({
     enum: ["Informal", "Workshop", "Talk"]
   },
   tracks: {
-    type: [TracksSchema]
+    type: [TracksSchema] // You may include other schemas (here included as array of embedded documents)
   },
   location: String
 });
 
+// Define Mongoose Model for Schema
 const Events = model("Events", EventsSchema);
+// Define Mongoose Model for Tracks
 const Tracks = model("Tracks", TracksSchema);
 
+// Convert Mongoose Model to GraphQL Pieces.
+// This is a `ObjectTypeComposer` instance for Events. `ObjectTypeComposer` has `GraphQLObjectType` inside, avaliable via method EventsTC.getType().
 exports.EventsTC = composeWithMongoose(Events, {});
+// This is a `ObjectTypeComposer` instance for Tracks. `ObjectTypeComposer` has `GraphQLObjectType` inside, avaliable via method TracksTC.getType().
 exports.TracksTC = composeWithMongoose(Tracks, {});
