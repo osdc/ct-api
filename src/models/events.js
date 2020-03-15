@@ -47,7 +47,7 @@ const EventsSchema = new mongoose.Schema({
 });
 
 const Events = model("Events", EventsSchema);
-const Tracks = model(`Tracks`, TracksSchema);
+const Tracks = model("Tracks", TracksSchema);
 
 exports.EventsTC = composeWithMongoose(Events, {});
-exports.TracksTC = composeWithMongoose(Tracks);
+exports.TracksTC = composeWithMongoose(Tracks, {});
