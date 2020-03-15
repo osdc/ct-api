@@ -4,10 +4,7 @@ const mongoose = require("mongoose");
 const graphqlSchema = require("./schema.js");
 
 mongoose
-  .connect("mongodb://localhost/ct_api", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect("mongodb://localhost:27017/ct_api")
   .then(() => console.log("Successfully connect to MongoDB."))
   .catch(err => console.error("Connection error", err));
 
