@@ -1,49 +1,46 @@
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
-const { buildSchema } = require("graphql");
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const EventSchema = new Schema({
-  Name: String
-});
-mongoose.connect("mongodb://localhost:27017/ct_api");
-const Event = mongoose.model("Event", EventSchema);
+const { graphqlSchema } = require("./schema.js");
 
-const schema = buildSchema(`
-  input EventInput{
-    Name : String
-  }
-  type Query {
-    hello: String
-    nextevent : [String]
-  }
-  type Mutation {
-    addevent(eventinput : EventInput) : String
-  }
-`);
-
-const root = {
-  hello: () => "Hello world!",
-  addevent: ({ eventinput: name }) => {
-    const event = new Event(name);
-    event.save();
-  },
-  nextevent: () => {
-    return Event.find().then(events => {
-      return events.map(event => {
-        return event.Name;
-      });
-    });
-  }
-};
+mongoose
+  .connect("mongodb://localhost:27017/ct_api", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log("Successfully connect to MongoDB."))
+  .catch(err => console.error("Connection error", err));
 
 const app = express();
+
 app.use(
   "/graphql",
   graphqlHTTP({
-    schema: schema,
-    rootValue: root,
+    schema: graphqlSchema,
     graphiql: true
   })
 );
+
 app.listen(4000, () => console.log("Now browse to localhost:4000/graphql"));
+
+//A sample mutation:
+
+// mutation {
+//   eventCreateOne( record : {
+//   	name: "Open Source for cats",
+//     description: "Open source workshops for felines among us.",
+//     dateCreated: "2020-03-27",
+//     dateUpdated: "2020-03-27",
+//     location: "Behind OAT"
+//   	}
+//   ) {
+//     recordId
+//     record {
+//       name
+//       description
+//       dateCreated
+//       dateUpdated
+//       location
+//     }
+//   }
+// }

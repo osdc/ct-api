@@ -4,7 +4,7 @@
   "description": "OSDC Community Tools API",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "nodemon src/index.js"
   },
   "repository": "https://github.com/osdc/ct-api.git",
   "license": "MIT",
@@ -12,9 +12,12 @@
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
+    "graphql-compose": "^7.12.3",
+    "graphql-compose-mongoose": "^7.3.4",
     "mongoose": "^5.9.2"
   },
   "devDependencies": {
+    "nodemon": "^2.0.2",
     "prettier": "^1.19.1"
   }
 }
