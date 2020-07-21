@@ -55,7 +55,7 @@ async function ghopslides(slides, token) {
     .then(() => {
       api
         .createpr({
-          title: "added new meetup via api",
+          title: "added resources to latest meetup via api",
           body: "Please pull these in!",
           head: "meetup-api",
           base: "master"

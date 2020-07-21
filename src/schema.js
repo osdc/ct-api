@@ -37,9 +37,10 @@ schemaComposer.Mutation.addFields({
   eventCreateMany: EventsTC.getResolver("createMany"),
   eventUpdateById: EventsTC.getResolver("updateById").wrapResolve(
     next => rp => {
-      console.log(rp.args.record.tracks[0].resources[0]);
-      let token = process.env.GITHUB_TOKEN;
-      ghopslides(rp.args.record.tracks[0].resources[0], token);
+      if (rp.args.record.tracks[0].resources[0]) {
+        let token = process.env.GITHUB_TOKEN;
+        ghopslides(rp.args.record.tracks[0].resources[0], token);
+      }
       return next(rp);
     }
   ),
