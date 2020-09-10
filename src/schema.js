@@ -2,6 +2,7 @@ const { schemaComposer } = require("graphql-compose");
 const { EventsTC } = require("./models/events");
 const { TracksTC } = require("./models/events");
 const ghop = require("./ghop");
+const ghopslides = require("./ghop");
 require("dotenv").config();
 
 // Here and in all other places of code variables suffix ...TC means that this is ObjectTypeComposer instance, ...ITC - InputTypeComposer, ...ETC - EnumTypeComposer.
@@ -27,14 +28,22 @@ schemaComposer.Mutation.addFields({
       details: rp.args.record.description,
       speaker: rp.args.record.speaker
         ? rp.args.record.speaker
-        : "someone on earth"
+        : "OSDC Core Team"
     };
     let token = process.env.GITHUB_TOKEN;
     ghop(meetupData, token);
     return next(rp);
   }),
   eventCreateMany: EventsTC.getResolver("createMany"),
-  eventUpdateById: EventsTC.getResolver("updateById"),
+  eventUpdateById: EventsTC.getResolver("updateById").wrapResolve(
+    next => rp => {
+      if (rp.args.record.tracks[0].resources[0]) {
+        let token = process.env.GITHUB_TOKEN;
+        ghopslides(rp.args.record.tracks[0].resources[0], token);
+      }
+      return next(rp);
+    }
+  ),
   eventUpdateOne: EventsTC.getResolver("updateOne"),
   eventUpdateMany: EventsTC.getResolver("updateMany"),
   eventRemoveById: EventsTC.getResolver("removeById"),
@@ -64,5 +73,3 @@ schemaComposer.Mutation.addFields({
 });
 
 exports.graphqlSchema = schemaComposer.buildSchema();
-
-// export default graphqlSchema;

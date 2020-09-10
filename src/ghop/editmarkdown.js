@@ -1,6 +1,6 @@
 const axios = require("axios");
 let newrow = "\n|TBA|TBA|TBA|TBA|TBA|";
-const editMarkdown = async (meetupData) => {
+const editMarkdown = async meetupData => {
   console.log(meetupData);
   md = await axios.get(
     "https://raw.githubusercontent.com/daemon1024/meetups/master/README.md"
@@ -12,4 +12,15 @@ const editMarkdown = async (meetupData) => {
   md = md.replace(/TBA/, "uploaded soon" + newrow);
   return md;
 };
+
+const addSlides = async slides => {
+  console.log(slides);
+  md = await axios.get(
+    "https://raw.githubusercontent.com/daemon1024/meetups/master/README.md"
+  );
+  md = md.data.replace(/uploaded soon/, `[Slides](${slides})`);
+  return md;
+};
+
 module.exports = editMarkdown;
+module.exports = addSlides;
