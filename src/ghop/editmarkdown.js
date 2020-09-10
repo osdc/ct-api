@@ -18,7 +18,7 @@ const addSlides = async slides => {
   md = await axios.get(
     "https://raw.githubusercontent.com/daemon1024/meetups/master/README.md"
   );
-  md = md.data.replace(/uploaded soon/, `[Sildes](${slides})`);
+  md = md.data.replace(/uploaded soon/, `[Slides](${slides})`);
   return md;
 };
 
