@@ -1,13 +1,30 @@
 const { schemaComposer } = require("graphql-compose");
-const { EventsTC } = require("./models/events");
+
+const { EventsTC, Events } = require("./models/events");
 const { TracksTC } = require("./models/events");
-const ghop = require("./ghop");
-const ghopslides = require("./ghop");
-require("dotenv").config();
 
 // Here and in all other places of code variables suffix ...TC means that this is ObjectTypeComposer instance, ...ITC - InputTypeComposer, ...ETC - EnumTypeComposer.
 // Add needed CRUD User operations to the GraphQL Schema
 // via graphql-compose it will be much much easier, with less typing
+
+const ghop = require("./ghop");
+const ghopslides = require("./ghop");
+
+require("dotenv").config();
+
+const {PubSub} = require("apollo-server-express")
+
+const pubsub = new PubSub();
+
+const NEW_MEETUP = 'NEW_MEETUP_ADDED';
+
+schemaComposer.Subscription.addFields({
+  eventAdded: {
+    type: EventsTC,
+    resolve: (_id) => Events.findById(_id),
+    subscribe: () => pubsub.asyncIterator([NEW_MEETUP]),
+  }
+})
 
 schemaComposer.Query.addFields({
   eventById: EventsTC.getResolver("findById"),
@@ -20,7 +37,14 @@ schemaComposer.Query.addFields({
 });
 
 schemaComposer.Mutation.addFields({
-  eventCreateOne: EventsTC.getResolver("createOne").wrapResolve(next => rp => {
+  eventCreateOne: EventsTC.getResolver("createOne", [
+    async (next, s, a, c, i) => {
+      const res = await next(s, a, c, i);
+      const _id = res?.record?._id;
+      if (_id) pubsub.publish(NEW_MEETUP, _id);
+      return res;
+    },
+  ]).wrapResolve(next => rp => {
     console.log(rp.args.record);
     let meetupData = {
       date: rp.args.record.event_start_time.toDateString(),
