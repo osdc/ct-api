@@ -10,7 +10,8 @@ const TracksSchema = new mongoose.Schema({
   resources: [
     {
       type: String,
-      unique: true
+      unique: true,
+      sparse:true
     }
   ],
   duration: "Date",
@@ -27,7 +28,6 @@ const EventsSchema = new mongoose.Schema({
   },
   dateUpdated: {
     type: "Date",
-    required: true
   },
   event_start_time: "Date",
   status: {
@@ -35,7 +35,7 @@ const EventsSchema = new mongoose.Schema({
     enum: ["scheduled", "ongoing", "finished"],
     default: "scheduled"
   },
-  eventLinks: { type: String, unique: true },
+  eventLinks: { type: String },
   visibility: Boolean,
   yes_rsvp_count: Number,
   type: {
