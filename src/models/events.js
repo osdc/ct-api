@@ -50,6 +50,7 @@ const EventsSchema = new mongoose.Schema({
 
 // Define Mongoose Model for Schema
 const Events = model("Events", EventsSchema);
+exports.Events = Events;
 // Define Mongoose Model for Tracks
 const Tracks = model("Tracks", TracksSchema);
 

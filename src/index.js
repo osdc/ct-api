@@ -1,6 +1,10 @@
 const express = require("express");
-const graphqlHTTP = require("express-graphql");
+const bodyParser = require("body-parser");
+const { ApolloServer } =require('apollo-server-express');
 const mongoose = require("mongoose");
+const { execute, subscribe }= require('graphql');
+const { createServer }= require('http');
+const { SubscriptionServer }= require('subscriptions-transport-ws');
 const { graphqlSchema } = require("./schema.js");
 
 mongoose
@@ -11,17 +15,28 @@ mongoose
   .then(() => console.log("Successfully connect to MongoDB."))
   .catch(err => console.error("Connection error", err));
 
+const PORT = 4000;
 const app = express();
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema: graphqlSchema,
-    graphiql: true
-  })
-);
+app.use('/graphql', bodyParser.json());
 
-app.listen(4000, () => console.log("Now browse to localhost:4000/graphql"));
+const apolloServer = new ApolloServer({ schema: graphqlSchema, playground: {
+  subscriptionEndpoint: `ws://localhost:${PORT}/subscriptions`
+} });
+apolloServer.applyMiddleware({ app });
+
+const server = createServer(app);
+
+server.listen(PORT, () => {
+    new SubscriptionServer({
+      execute,
+      subscribe,
+      schema: graphqlSchema,
+    }, {
+      server: server,
+      path: '/subscriptions',
+    });
+});
 
 //A sample mutation:
 
